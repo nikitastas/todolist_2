@@ -7,6 +7,7 @@ export type TaskType = {
 	title: string
 	isDone: boolean
 }
+export type FilterType = 'all' | 'active' | 'completed'
 
 function App() {
 	const [tasks, setTasks] = useState<Array<TaskType>>([
@@ -18,14 +19,30 @@ function App() {
 		{ id: 6, title: 'RTK query', isDone: false },
 	])
 
+	const [filter, setFilter] = useState<FilterType>('all')
+
 	const removeTask = (taskId: number) => {
 		setTasks(tasks.filter(f => f.id !==taskId))
 	}
 
+	const changeFilter = (filter: FilterType) => {
+		setFilter(filter)
+	}
+
+	let filteredTasks: Array<TaskType> = tasks
+	if (filter === 'active') {
+		filteredTasks = tasks.filter(task => !task.isDone)
+	}
+	if (filter === 'completed') {
+		filteredTasks = tasks.filter(task => task.isDone)
+	}
+
+
+
 
 	return (
 		<div className="App">
-			<Todolist title="What to learn" tasks={tasks} removeTask={removeTask} />
+			<Todolist title="What to learn" tasks={filteredTasks} removeTask={removeTask} changeFilter={changeFilter} />
 		</div>
 	);
 }
